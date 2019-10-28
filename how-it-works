@@ -1,0 +1,17 @@
+////// Rundown of the App \\\\\\\
+
+1. The Provider has setup the store with redux and is available to components which have yet to be created
+* Inside of the store is a subscribe function which console.logs all the visible expenses on each action we take 
+  The store is passed via a prop inside Provider 
+  The store is made separate in another file where we combine the reducers as well (reducer = what action does what and what's the default state for the store) *
+
+2. AppRouter is made which has the BrowserRouter, this lets you setup which other components to display based on the AppRouter
+* Here the whole App is rendered with the React.createElement call on the div called #app *
+
+3. It renders the Header Component on all pages
+4. Renders the ExpenseDashBoardPage which renders the ExpenseListFilters and ExpenseListItems
+
+* ExpenseListFilters has a search bar and sorting by Date / Amount 
+  ExpenseListItems renders the expense description and a <Link> to the edit page *
+
+5. 

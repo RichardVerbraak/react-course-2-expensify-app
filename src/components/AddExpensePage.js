@@ -1,0 +1,48 @@
+import React from 'react'
+import { connect } from 'react-redux'
+import ExpenseForm from './ExpenseForm'
+import { addExpense } from '../actions/expenses'
+
+// onSubmit gets passed down to ExpenseForm
+export class AddExpensePage extends React.Component {
+    onSubmit = (expense) => {
+        this.props.addExpense(expense)
+        this.props.history.push('/')
+    }
+    render() {
+        return (
+        <div>
+            <h1>Add Expense</h1>
+            <ExpenseForm
+                onSubmit={this.onSubmit}
+            >
+            </ExpenseForm>
+        </div>
+        )
+    }
+}
+
+// Functions that only render JSX is much handier than classes (more notes on this)
+// But defining a new function inside of it like the onSubmit(dispatch) 'in-line' of this JSX function is bad
+// It has to re-create the function every time this component rerenders, it's not that much of a performance issue but better to avoid it
+// const AddExpensePage = (props) => (
+//     <div>
+//         <h1>Add Expense</h1>
+//         <ExpenseForm
+//             onSubmit={(expense) => {
+//                 props.onSubmit(addExpense(expense))
+//                 props.history.push('/')
+//             }}
+//         ></ExpenseForm>
+//     </div>
+// )
+
+// Abstract away with dispatch (we basically rename dispatch to addExpense) which is now more accesible via props, for writing tests
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addExpense: (expense) => dispatch(addExpense(expense))
+    }
+}
+
+
+export default connect(undefined, mapDispatchToProps)(AddExpensePage)
