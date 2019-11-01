@@ -1,7 +1,5 @@
 import moment from 'moment'
 
-// Expenses Array for testing
-
 const expenses = [{
     id: '1',
     description: 'Gum',
