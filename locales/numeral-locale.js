@@ -20,4 +20,4 @@ const dutchLocale = numeral.register('locale', 'nl-nl', {
     }
 });
 
-export { dutchLocale }
+export default dutchLocale

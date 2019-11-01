@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import getVisibleExpenses from '../selectors/expenses'
 import getExpensesTotal from '../selectors/expenses-total'
 import numeral from 'numeral'
+import dutchLocale from '../../locales/numeral-locale'
 
 numeral.locale('nl-nl')
 
-class ExpensesSummary extends React.Component {
+export class ExpensesSummary extends React.Component {
     state = {
         expenseCount: getVisibleExpenses(this.props.expenses, this.props.filters).length,
         expensesTotal: getExpensesTotal(getVisibleExpenses(this.props.expenses, this.props.filters))
@@ -22,7 +23,7 @@ class ExpensesSummary extends React.Component {
     }
 }
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state) => {
     return {
         expenses: state.expenses,
         filters: state.filters
