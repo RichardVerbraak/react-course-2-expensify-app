@@ -2,26 +2,26 @@
 
 exports[`Should render ExpensesSummary with one expense 1`] = `
 <div>
-  <p>
+  <h1>
     Viewing 
     1
      
     expense
      totalling 
     € 1,95
-  </p>
+  </h1>
 </div>
 `;
 
 exports[`Should render ExpensesSummary with two expenses 1`] = `
 <div>
-  <p>
+  <h1>
     Viewing 
     2
      
     expenses
      totalling 
     € 1.096,95
-  </p>
+  </h1>
 </div>
 `;

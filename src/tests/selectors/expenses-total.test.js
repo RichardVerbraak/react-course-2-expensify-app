@@ -9,8 +9,6 @@ test('Should return 0 if no expenses', () => {
 // I screwed up at first by passing in the expense[0] object but it forEach can't iterate over objects let alone one object
 test('Should add up 1 expense', () => {
     const result = getExpensesTotal([expenses[0]])
-    console.log(expenses[0])
-    console.log([expenses[0]])
     expect(result).toBe(195)
 })
 

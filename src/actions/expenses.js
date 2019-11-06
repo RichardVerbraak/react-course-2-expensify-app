@@ -15,6 +15,7 @@ export const addExpense = (expense) => {
 }
 
 // HARDER THEN IT LOOKS
+// This dispatches another dispatch call AFTER it's been stored in firebase upon resolve
 // We get an expense passed from the component to this action
 // If there isn't one we set it default to an empty object
 // Then we start off by creating a function that has access to dispatch (now possible too thunk for creating functions inside of actions)
@@ -34,7 +35,7 @@ export const startAddExpense = (expenseData = {}) => {
 
         const expense = { description, note, amount, createdAt }
 
-        database.ref('expenses').push(expense).then((ref) => {
+        return database.ref('expenses').push(expense).then((ref) => {
             dispatch(addExpense({
                 id: ref.key,
                 ...expense
