@@ -16,7 +16,7 @@ export class ExpensesSummary extends React.Component {
         return (
             <div>
                 {this.state.expenseCount > 0 && 
-                    <p>Viewing {this.state.expenseCount} {this.state.expenseCount === 1 ? `expense` : `expenses`} totalling {numeral(this.state.expensesTotal / 100).format('$0,0.00')}</p>
+                    <h1>Viewing {this.state.expenseCount} {this.state.expenseCount === 1 ? `expense` : `expenses`} totalling {numeral(this.state.expensesTotal / 100).format('$0,0.00')}</h1>
                 }                
             </div>
         )

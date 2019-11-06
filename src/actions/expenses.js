@@ -1,18 +1,45 @@
-import uuid from 'uuid'
+import database from '../firebase/firebase'
 
-// The top 2 expect objects to get passed in
+// With firebase (is now asynchronous)
+// component calls action generator
+// action generator returns function
+// component dispatches function (?)
+// function runs internally by redux and then has the ability to dispatch other actions 
 
 // ADD_EXPENSE
-export const addExpense = ({description = '', note = '', amount = 0, createdAt = 0} = {}) => {
+export const addExpense = (expense) => {
     return {
         type: 'ADD_EXPENSE',
-        expense: {
-            id: uuid(),
-            description: description,
-            note: note,
-            amount: amount,
-            createdAt: createdAt
-        }
+        expense: expense
+    }
+}
+
+// HARDER THEN IT LOOKS
+// We get an expense passed from the component to this action
+// If there isn't one we set it default to an empty object
+// Then we start off by creating a function that has access to dispatch (now possible too thunk for creating functions inside of actions)
+// If there is one with empty fields we set the expenseData to default values
+// We setup to destructure things from the expense we got from the component, and store in firebase AND redux store
+// We push on the expense and save it to firebase and THEN, if resolved (promise/asynchronous) we dispatch the action to change the redux store
+// .then has access to the reference (because it's now stored in firebase) and we store the firebase id in the redux store as well as the rest
+export const startAddExpense = (expenseData = {}) => {
+    return (dispatch) => {
+        // Default values if fields were left empty
+        const {
+            description = '', 
+            note = '', 
+            amount = 0, 
+            createdAt = 0
+        } = expenseData
+
+        const expense = { description, note, amount, createdAt }
+
+        database.ref('expenses').push(expense).then((ref) => {
+            dispatch(addExpense({
+                id: ref.key,
+                ...expense
+            }))
+        })
     }
 }
 

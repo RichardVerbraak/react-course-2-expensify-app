@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import ExpenseForm from './ExpenseForm'
-import { addExpense } from '../actions/expenses'
+import { startAddExpense } from '../actions/expenses'
 
 // onSubmit gets passed down to ExpenseForm
+// which is were we actually add an expense
 export class AddExpensePage extends React.Component {
     onSubmit = (expense) => {
-        this.props.addExpense(expense)
+        this.props.startAddExpense(expense)
         this.props.history.push('/')
     }
     render() {
@@ -40,7 +41,7 @@ export class AddExpensePage extends React.Component {
 // Abstract away with dispatch (we basically rename dispatch to addExpense) which is now more accesible via props, for writing tests
 const mapDispatchToProps = (dispatch) => {
     return {
-        addExpense: (expense) => dispatch(addExpense(expense))
+        startAddExpense: (expense) => dispatch(startAddExpense(expense))
     }
 }
 
