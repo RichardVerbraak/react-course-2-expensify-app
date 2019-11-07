@@ -1,0 +1,7 @@
+An explanation of environment variables for later reference:
+
+
+https://medium.com/chingu/an-introduction-to-environment-variables-and-how-to-use-them-f602f66d15fa
+
+Env variables are setup in a .env file and are formatted as name=values.
+This isnt a feature of either the browser or JS so a package like dotenv is required to enable this (create-react-app has this build in!)
