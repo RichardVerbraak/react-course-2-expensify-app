@@ -52,6 +52,15 @@ export const removeExpense = ({ id } = {}) => {
     }
 }
 
+// Gets the id passed in from component --> removes it in the database --> then upon resolve, dispatches the removeExpense action to remove it from redux store
+export const startRemoveExpense = ({ id }) => {
+    return (dispatch) => {
+        return database.ref(`expenses/${id}`).remove().then(() => {
+            dispatch(removeExpense({ id }))
+        })
+    }
+}
+
 // EDIT_EXPENSE
 export const editExpense = (id, updates) => {
     return {
