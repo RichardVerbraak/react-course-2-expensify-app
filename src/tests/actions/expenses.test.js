@@ -1,10 +1,30 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import database from '../../firebase/firebase'
-import { addExpense, editExpense, removeExpense, startAddExpense } from '../../actions/expenses'
+import { addExpense, editExpense, removeExpense, startAddExpense, setExpenses, startSetExpenses } from '../../actions/expenses'
 import expenses from '../fixtures/expenses'
 
 const createMockStore = configureMockStore([thunk])
+
+// Because firebase has a different format and doesnt support arrays we have to 'pull' off all of the individual expense objects and toss them onto expenseData
+// It 'somehow' creates a unique id and shows the destructured expense properties
+// Now it's going to be in the format that firebase supports and looks like this:
+// //'2': {
+//     description: 'Rent',
+//     note: '',
+//     amount: 109500,
+//     createdAt: -345600000
+//   },
+beforeEach((done) => {
+    const expensesData = {}
+    expenses.forEach(({ id, description, note, amount, createdAt }) => {
+        expensesData[id] = { description, note, amount, createdAt}
+        // console.log(expensesData)
+    })
+    database.ref('expenses').set(expensesData).then(() => {
+        done()
+    })    
+})
 
 // toBe doesn't work because {} === {} is always false, same with an array
 // toEqual compares the objects key/value pairs with each other
@@ -95,6 +115,27 @@ test('Should add expense with default to database and redux store', (done) => {
         expect(snapshot.val()).toEqual(expenseDefaults)
         done()   
     })         
+})
+
+test('Should setup set expense action object with data', () => {
+    const action = setExpenses(expenses)
+    expect(action).toEqual({
+        type: 'SET_EXPENSES',
+        expenses
+    })
+})
+
+// We create mockStore to see if the expenses are saved to the redux store AFTER firebase has done its thing
+test('Should fetch the expenses from firebase', (done) => {
+    const store = createMockStore({})
+    store.dispatch(startSetExpenses()).then(() => {
+        const actions = store.getActions()
+        expect(actions[0]).toEqual({
+            type: 'SET_EXPENSES',
+            expenses
+        })        
+    })
+    done()
 })
 
 // This one is no longer responsible since the firebase implementation, it is now the startAddExpense action

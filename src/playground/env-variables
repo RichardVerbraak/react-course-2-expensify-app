@@ -5,3 +5,6 @@ https://medium.com/chingu/an-introduction-to-environment-variables-and-how-to-us
 
 Env variables are setup in a .env file and are formatted as name=values.
 This isnt a feature of either the browser or JS so a package like dotenv is required to enable this (create-react-app has this build in!)
+
+We did not set up a production environment because Heroku provides us another way of injecting env variables (we did this via the command line by saying heroku config:set FIREBASE_API..etc)
+You could do this via webpack like the others but this way it keeps it a secret so you cant accidentally commit them to github

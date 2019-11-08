@@ -1,5 +1,6 @@
 const expensesReducerDefaultState = []
 
+// The functions that changes the expenses's state based on the data we get back from the action calls (which are triggered inside components)
 const expensesReducer = (state = expensesReducerDefaultState, action) => {
     switch(action.type) {
         // Gets state and returns new arr with the old + the new expense
@@ -23,6 +24,8 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
                     return expense
                 }
             })
+        case 'SET_EXPENSES':
+            return action.expenses
         default:
             return state
     }

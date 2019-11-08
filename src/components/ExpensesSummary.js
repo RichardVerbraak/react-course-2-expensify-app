@@ -7,6 +7,8 @@ import dutchLocale from '../../locales/numeral-locale'
 
 numeral.locale('nl-nl')
 
+// Change the inline variables (variables defined in render) to be outside
+// Maybe use numeral beforehand instead of doing this inside of render
 export class ExpensesSummary extends React.Component {
     state = {
         expenseCount: getVisibleExpenses(this.props.expenses, this.props.filters).length,

@@ -1,25 +1,7 @@
 import expensesReducer from "../../reducers/expenses"
 import moment from 'moment'
-
-const expenses = [{
-    id: '1',
-    description: 'Gum',
-    note: '',
-    amount: 195,
-    createdAt: 0
-}, {
-    id: '2',
-    description: 'Rent',
-    note: '',
-    amount: 109500,
-    createdAt: moment(0).subtract(4, 'days').valueOf()
-}, {
-    id: '3',
-    description: 'Credit Card',
-    note: '',
-    amount: 4500,
-    createdAt: moment(0).add(4, 'days').valueOf()
-}]
+import { setExpenses } from "../../actions/expenses"
+import expenses from '../fixtures/expenses'
 
 // @@INIT is what initializes default values
 test('Should default to an empty array at first', () => {
@@ -69,4 +51,16 @@ test('Should not edit expense, if id not found', () => {
     expect(state).toEqual(expenses)
 })
 
+test('Should set expenses', () => {
+    const newData = [{
+        id: '555',
+        description: 'I am the only expense in this array',
+        note: 'I got set by the set expenses action',
+        amount: 5,
+        createdAt: 100
+    }]
+    const action = setExpenses(newData)
+    const state = expensesReducer(expenses, action)
+    expect(state).toEqual(newData)
+})
 

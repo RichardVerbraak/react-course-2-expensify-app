@@ -10,6 +10,7 @@
 
 // We setup the development and test environment for firebase, so we have two databases, one for testing and the other for real data
 // This runs based on the below if statements
+// We had to define the process.env plugin below for webpack and we had to stringify them to add double quotes " " around the values when it reads off of it
 
 const path = require('path')
 const webpack = require('webpack')

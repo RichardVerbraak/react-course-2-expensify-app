@@ -60,3 +60,29 @@ export const editExpense = (id, updates) => {
         updates: updates
     }
 }
+
+// SET_EXPENSES
+export const setExpenses = (expenses) => {
+    return {
+        type: 'SET_EXPENSES',
+        expenses
+    }
+}
+
+// I previously couldn't see the new expenses loading on the page because createdAt was zero aka 1 Jan 1970
+// I added another .then call after we pushed onto the expenses with forEach but its unecessary, it did still work
+export const startSetExpenses = () => {
+    return (dispatch) => {
+        return database.ref('expenses').once('value')
+        .then((snapshot) => {  
+            const expenses = []                           
+            snapshot.forEach((childSnapshot) => {
+                expenses.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                })
+            })
+            dispatch(setExpenses(expenses))
+        })       
+    }
+}
