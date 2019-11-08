@@ -1,9 +1,16 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import database from '../../firebase/firebase'
-import { addExpense, editExpense, removeExpense, startAddExpense, setExpenses, startSetExpenses, startRemoveExpense } from '../../actions/expenses'
+import { 
+    addExpense, 
+    editExpense, 
+    removeExpense, 
+    startAddExpense, 
+    setExpenses, 
+    startSetExpenses, 
+    startRemoveExpense 
+} from '../../actions/expenses'
 import expenses from '../fixtures/expenses'
-import { create } from 'handlebars'
 
 const createMockStore = configureMockStore([thunk])
 
@@ -35,6 +42,22 @@ test('Should setup remove expense action', () => {
         type: 'REMOVE_EXPENSE',
         id: '123abc'
     })
+})
+
+test('Should remove expense by id from firebase', (done) => {
+    const store = createMockStore({})
+    store.dispatch(startRemoveExpense(expenses[0])).then(() => {
+        const actions = store.getActions()
+        expect(actions[0]).toEqual({
+            type: 'REMOVE_EXPENSE',
+            id
+        })
+        return database.ref(`expenses/${expenses.id}`).once('value')     
+    }).then((snapshot) => {
+        const data = snapshot.val()
+        expect(data).toBe(null)
+        done()            
+    })        
 })
 
 test('Should setup edit expense action', () => {
@@ -70,7 +93,7 @@ test('Should add expense to database and redux store', (done) => {
 
     // It will save to firebase first before storing in Redux
     store.dispatch(startAddExpense(expenseData)).then(() => {
-        // Is an array of all the actions that were dispatched
+        // Actions is an array of all the actions that were dispatched
         const actions = store.getActions()
         expect(actions[0]).toEqual({
             type: 'ADD_EXPENSE',
@@ -79,14 +102,13 @@ test('Should add expense to database and redux store', (done) => {
                 ...expenseData
             }
         })
-
         // expense.id is the same as looking it up by firebases key value, firebase key was stored inside expense.id in the startAddExpense function
+        // If the returned promise above resolves then check the if the data matches  
         return database.ref(`expenses/${actions[0].expense.id}`).once('value')
-        // If the returned promise above resolves then check the if the data matches       
     }).then((snapshot) => {
         expect(snapshot.val()).toEqual(expenseData)
-        done()
-    })
+        done()                         
+    })    
 })
 
 test('Should add expense with default to database and redux store', (done) => {
@@ -96,8 +118,7 @@ test('Should add expense with default to database and redux store', (done) => {
         note: '',
         amount: 0,
         createdAt: 0
-    }
-    
+    }    
     // Check if action was dispatched to redux store
     store.dispatch(startAddExpense({})).then(() => {
         const actions = store.getActions()
@@ -110,12 +131,11 @@ test('Should add expense with default to database and redux store', (done) => {
         })
 
         // Check if stored in firebase
-        return firebase.ref(`expenses/${actions[0].expense.id}`).once('value')
-                
+        return firebase.ref(`expenses/${actions[0].expense.id}`).once('value')                              
     }).then((snapshot) => {
         expect(snapshot.val()).toEqual(expenseDefaults)
-        done()   
-    })         
+        done()                            
+    })           
 })
 
 test('Should setup set expense action object with data', () => {
@@ -135,17 +155,6 @@ test('Should fetch the expenses from firebase', (done) => {
             type: 'SET_EXPENSES',
             expenses
         })        
-    })
-    done()
-})
-
-test('Should remove expenses from firebase', (done) => {
-    const store = createMockStore({})
-    store.dispatch(startRemoveExpense(expenses[0]))
-
-    database.ref(`expenses/${expenses.id}`).once('value').then((snapshot) => {
-        const data = snapshot.val()
-        expect(data).toBe(null)
     })
     done()
 })
