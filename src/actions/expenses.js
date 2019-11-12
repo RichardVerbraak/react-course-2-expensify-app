@@ -70,6 +70,16 @@ export const editExpense = (id, updates) => {
     }
 }
 
+// Returns a function that dispatches editExpense only when firebase has stored the data
+export const startEditExpense = (id, updates) => {
+    return (dispatch) => {        
+        return database.ref(`expenses/${id}`).update(updates)
+        .then(() => {
+            dispatch(editExpense(id, updates))
+        })
+    }
+}
+
 // SET_EXPENSES
 export const setExpenses = (expenses) => {
     return {

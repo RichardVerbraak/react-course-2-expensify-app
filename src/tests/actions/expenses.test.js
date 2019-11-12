@@ -8,14 +8,16 @@ import {
     startAddExpense, 
     setExpenses, 
     startSetExpenses, 
-    startRemoveExpense 
+    startRemoveExpense,
+    startEditExpense
 } from '../../actions/expenses'
 import expenses from '../fixtures/expenses'
 
 const createMockStore = configureMockStore([thunk])
 
 // Because firebase has a different format and doesnt support arrays we have to 'pull' off all of the individual expense objects and toss them onto expenseData
-// It 'somehow' creates a unique id and shows the destructured expense properties
+// We can add a property like so expenseData[id] if that property is a dynamic one aka not predefined, unlike the destructured expense properties which were defined
+// It basically says, for each expense, make an id: { add an object with the following properties }
 // Now it's going to be in the format that firebase supports and looks like this:
 // //'2': {
 //     description: 'Rent',
@@ -50,7 +52,7 @@ test('Should remove expense by id from firebase', (done) => {
         const actions = store.getActions()
         expect(actions[0]).toEqual({
             type: 'REMOVE_EXPENSE',
-            id
+            id: expenses[0].id
         })
         return database.ref(`expenses/${expenses.id}`).once('value')     
     }).then((snapshot) => {
@@ -69,6 +71,30 @@ test('Should setup edit expense action', () => {
             note: 'New note value'
         }
     })
+})
+
+test('Should update expense in redux store and then firebase', (done) => {
+    const store = createMockStore()
+    const id = expenses[2].id
+    const updates = {
+        description: 'Newly Updated',
+        note: 'Should be updated',
+        amount: 404,
+        createdAt: 404
+    }
+
+    store.dispatch(startEditExpense(id, updates)).then(() => {
+        const actions = store.getActions()
+        expect(actions[0]).toEqual({
+            type: 'EDIT_EXPENSE',
+            id,
+            updates
+        })
+        return database.ref(`expenses/${id}`).once('value')        
+    }).then((snapshot) => {
+        expect(snapshot.val()).toEqual(updates)
+        done()
+    })    
 })
 
 test('Should setup add expense action', () => {
@@ -131,7 +157,7 @@ test('Should add expense with default to database and redux store', (done) => {
         })
 
         // Check if stored in firebase
-        return firebase.ref(`expenses/${actions[0].expense.id}`).once('value')                              
+        return database.ref(`expenses/${actions[0].expense.id}`).once('value')                              
     }).then((snapshot) => {
         expect(snapshot.val()).toEqual(expenseDefaults)
         done()                            

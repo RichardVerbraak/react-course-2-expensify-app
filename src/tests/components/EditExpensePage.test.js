@@ -3,16 +3,16 @@ import { shallow } from 'enzyme'
 import expenses from '../fixtures/expenses'
 import { EditExpensePage } from '../../components/EditExpensePage'
 
-let editExpense, startRemoveExpense, history, wrapper
+let startEditExpense, startRemoveExpense, history, wrapper
 
 // history (an object) has a method called push on it, which we are going to mock
 // We are going to spy on these functions to see if they are called with the correct data
 // We pass in a expense prop to simulate the actual component (I used the expenses fixture without the expense prop which isnt the 'real' simulation)
 beforeEach(() => {
-    editExpense = jest.fn()
+    startEditExpense = jest.fn()
     startRemoveExpense = jest.fn()
     history = { push: jest.fn() }
-    wrapper = shallow(<EditExpensePage history={history} editExpense={editExpense} startRemoveExpense={startRemoveExpense} expense={expenses[0]}/>)
+    wrapper = shallow(<EditExpensePage history={history} startEditExpense={startEditExpense} startRemoveExpense={startRemoveExpense} expense={expenses[0]}/>)
 })
 
 test('Should render EditExpensePage', () => {
@@ -22,7 +22,7 @@ test('Should render EditExpensePage', () => {
 test('Should handle editExpense', () => {
     wrapper.find('ExpenseForm').prop('onSubmit')(expenses[0])
     expect(history.push).toHaveBeenLastCalledWith('/')
-    expect(editExpense).toHaveBeenLastCalledWith(expenses[0].id ,expenses[0])
+    expect(startEditExpense).toHaveBeenLastCalledWith(expenses[0].id ,expenses[0])
 })
 
 // or wrapper.find.('button').simulate('click')
