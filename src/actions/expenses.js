@@ -1,4 +1,5 @@
 import database from '../firebase/firebase'
+import { get } from 'http'
 
 // With firebase (is now asynchronous)
 // component calls action generator
@@ -23,8 +24,11 @@ export const addExpense = (expense) => {
 // We setup to destructure things from the expense we got from the component, and store in firebase AND redux store
 // We push on the expense and save it to firebase and THEN, if resolved (promise/asynchronous) we dispatch the action to change the redux store
 // .then has access to the reference (because it's now stored in firebase) and we store the firebase id in the redux store as well as the rest
+
+// We also have access to get the state from redux with thunk
 export const startAddExpense = (expenseData = {}) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
         // Default values if fields were left empty
         const {
             description = '', 
@@ -35,7 +39,7 @@ export const startAddExpense = (expenseData = {}) => {
 
         const expense = { description, note, amount, createdAt }
 
-        return database.ref('expenses').push(expense).then((ref) => {
+        return database.ref(`users/${uid}/expenses`).push(expense).then((ref) => {
             dispatch(addExpense({
                 id: ref.key,
                 ...expense
@@ -54,8 +58,9 @@ export const removeExpense = ({ id } = {}) => {
 
 // Gets the id passed in from component --> removes it in the database --> then upon resolve, dispatches the removeExpense action to remove it from redux store
 export const startRemoveExpense = ({ id } = {}) => {
-    return (dispatch) => {
-        return database.ref(`expenses/${id}`).remove().then(() => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return database.ref(`users/${uid}/expenses/${id}`).remove().then(() => {
             dispatch(removeExpense({ id }))
         })
     }
@@ -72,8 +77,9 @@ export const editExpense = (id, updates) => {
 
 // Returns a function that dispatches editExpense only when firebase has stored the data
 export const startEditExpense = (id, updates) => {
-    return (dispatch) => {        
-        return database.ref(`expenses/${id}`).update(updates)
+    return (dispatch, getState) => {        
+        const uid = getState().auth.uid
+        return database.ref(`users/${uid}/expenses/${id}`).update(updates)
         .then(() => {
             dispatch(editExpense(id, updates))
         })
@@ -91,8 +97,9 @@ export const setExpenses = (expenses) => {
 // I previously couldn't see the new expenses loading on the page because createdAt was zero aka 1 Jan 1970
 // I added another .then call after we pushed onto the expenses with forEach but its unecessary, it did still work
 export const startSetExpenses = () => {
-    return (dispatch) => {
-        return database.ref('expenses').once('value')
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return database.ref(`users/${uid}/expenses`).once('value')
         .then((snapshot) => {  
             const expenses = []                           
             snapshot.forEach((childSnapshot) => {

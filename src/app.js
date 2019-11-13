@@ -38,7 +38,7 @@ const renderApp = () => {
 
 // Watches if the login state changes, also on your first visit
 // If user is logged in -> fetch their expenses -> render the page -> if on login page -- push them to the dashboard page (so we don't get redirected when logged in and refreshing page)
-// If not logged in -> push to login page
+// If not logged in or when logging out -> render the app -- start over on the login page
 firebase.auth().onAuthStateChanged((user) => {
  if (user) {
     store.dispatch(login(user.uid))
