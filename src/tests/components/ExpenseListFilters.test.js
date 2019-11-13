@@ -62,7 +62,7 @@ test('Should sort by amount', () => {
 })
 
 // Use simulate for DOM events and prop otherwise (either works though)
-// withStyles had to be added to fix the stupid *** error about props method on 0 nodes or something
+// withStyles had to be added to fix the stupid error about props method on 0 nodes or something
 test('Should set startDate and endDate', () => {
     wrapper.find('withStyles(DateRangePicker)').prop('onDatesChange')({ startDate: altFilters.startDate, endDate: altFilters.endDate })
     expect(setStartDate).toHaveBeenLastCalledWith(altFilters.startDate)

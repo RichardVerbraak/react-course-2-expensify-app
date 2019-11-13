@@ -1,15 +1,24 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Header from '../../components/Header'
+import { Header } from '../../components/Header'
 
 // shallow rendering shows only what components get rendered and what data gets passed down
 // toJSON is needed if we want to only see meaningful stuff instead of enzyme library things all in the component
 
+let wrapper, startLogout
+
+beforeEach(() => {
+    startLogout = jest.fn()
+    wrapper = shallow(<Header startLogout={startLogout}></Header>)
+})
+
 test('Should render Header correctly', () => {
-    const wrapper = shallow(<Header />)
     expect(wrapper).toMatchSnapshot()
-    
-    // expect(wrapper.find('h1').text()).toBe('Expensify')
+})
+
+test('Should call startLogout on button click', () => {
+    wrapper.find('button').simulate('click')
+    expect(startLogout).toHaveBeenCalled()
 })
 
 // test('Should render Header correctly', () => {

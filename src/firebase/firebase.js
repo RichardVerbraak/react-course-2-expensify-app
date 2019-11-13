@@ -16,7 +16,10 @@ firebase.initializeApp(firebaseConfig)
 
 const database = firebase.database()
 
-export { firebase, database as default}
+// Setup firebase to authenticate with Google
+const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
+
+export { firebase, googleAuthProvider, database as default}
 
 // database.ref('expenses').on('child_changed', (snapshot) => {
 //     console.log(snapshot.key, snapshot.val())

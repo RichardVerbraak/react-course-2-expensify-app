@@ -1,0 +1,19 @@
+/** NOTES **\
+
+//# Different way of adding property onto object
+
+Refers to beforeEach test function we have in expenses.test.js
+expensesData is an object. You can add properties to an object in two ways:
+
+1.
+
+expensesData.someProperty = { description, note, amount, createdAt }
+2.
+
+expensesData['someProperty']= { description, note, amount, createdAt }
+The reason we use the second version is because the first version only works with pre-defined strings. What if "someProperty" is a dynamic variable or something not a string? Then the first version won't work in that case.
+
+
+//# REDUX-THUNK 
+
+With redux-thunk. Redux calls the function we return and passes in dispatch as an argument. When we call dispatch in the function, it then dispatches that action.
