@@ -10,6 +10,7 @@ import 'normalize.css/normalize.css'
 import './styles/styles.scss'
 import 'react-dates/lib/css/_datepicker.css'
 import { firebase } from './firebase/firebase'
+import LoadingPage from './components/LoadingPage'
 
 const store = configureStore()
 // store.subscribe(() => {
@@ -25,7 +26,7 @@ const jsx = (
     </Provider>
 )
 
-ReactDOM.render(<p>Loading...</p> , document.getElementById('app'))
+ReactDOM.render(<LoadingPage/> , document.getElementById('app'))
 
 // Refactor to one render instead of having 2 lines of ReactDOM.render
 let hasRendered = false

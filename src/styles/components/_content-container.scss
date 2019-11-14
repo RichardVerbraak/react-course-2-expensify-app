@@ -1,0 +1,6 @@
+// to distribute the left over space from max-width, we use margin 0 auto to have equal margins on left and right
+.content-container {
+    margin: 0 auto;
+    padding: 0 $m-size;
+    max-width: 80rem;
+}

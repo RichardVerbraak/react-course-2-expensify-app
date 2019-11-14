@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import getVisibleExpenses from '../selectors/expenses'
 import getExpensesTotal from '../selectors/expenses-total'
 import numeral from 'numeral'
@@ -9,6 +10,7 @@ numeral.locale('nl-nl')
 
 //# Note: I refactored this because the summary wouldn't update when I used state the previous time
 // This isn't the most clean code but it works
+// TODO: BREAK UP THE LONG LINE OF CODE BELOW
 
 // Change the inline variables (variables defined in render) to be outside
 // Maybe use numeral beforehand instead of doing this inside of render
@@ -21,10 +23,16 @@ export class ExpensesSummary extends React.Component {
     }
     render() {
         return (
-            <div>
-                {this.visibleExpenses() > 0 && 
-                    <h1>Viewing {this.visibleExpenses()} {this.visibleExpenses() === 1 ? `expense` : `expenses`} totalling {numeral(this.expensesSum() / 100).format('$0,0.00')}</h1>
-                }
+            <div className="page-header">
+                <div className="content-container">
+                    {this.visibleExpenses() > 0 && 
+                        <h1 className="page-header__title">
+                        Viewing <span>{this.visibleExpenses()}</span> {this.visibleExpenses() === 1 ? `expense` : `expenses`} totalling <span>{numeral(this.expensesSum() / 100).format('$0,0.00')}</span></h1>
+                    }
+                    <div className="page-header__actions">
+                        <Link className="button" to="/create">Add Expense</Link>
+                    </div>
+                </div>
             </div>
         )
     }

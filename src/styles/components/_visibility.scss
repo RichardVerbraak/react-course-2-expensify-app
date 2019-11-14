@@ -1,0 +1,14 @@
+// displays expenses only on mobile
+// If it reaches min desktop width -> dont show
+.show-for-mobile {
+    @media (min-width: $desktop-breakpoint) {
+        display: none;
+    }
+}
+
+// displays expense / amount on desktop
+.show-for-desktop {
+    @media (max-width: $desktop-breakpoint - 0.1rem) {
+        display: none;
+    }
+}

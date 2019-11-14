@@ -1,26 +1,30 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import ExpenseForm from './ExpenseForm'
-import { startAddExpense } from '../actions/expenses'
+import React from "react";
+import { connect } from "react-redux";
+import ExpenseForm from "./ExpenseForm";
+import { startAddExpense } from "../actions/expenses";
 
 // onSubmit gets passed down to ExpenseForm
 // which is were we actually add an expense
 export class AddExpensePage extends React.Component {
-    onSubmit = (expense) => {
-        this.props.startAddExpense(expense)
-        this.props.history.push('/')
-    }
-    render() {
-        return (
-        <div>
-            <h1>Add Expense</h1>
-            <ExpenseForm
-                onSubmit={this.onSubmit}
-            >
-            </ExpenseForm>
+  onSubmit = expense => {
+    this.props.startAddExpense(expense);
+    this.props.history.push("/");
+  };
+  render() {
+    return (
+      <div>
+        <div className="page-header">
+          <div className="content-container">
+            <h1 className="page-header__title">Add Expense</h1>
+          </div>
         </div>
-        )
-    }
+
+        <div className="content-container">
+          <ExpenseForm onSubmit={this.onSubmit}></ExpenseForm>
+        </div>
+      </div>
+    );
+  }
 }
 
 // Functions that only render JSX is much handier than classes (more notes on this)
@@ -39,11 +43,10 @@ export class AddExpensePage extends React.Component {
 // )
 
 // Abstract away with dispatch (we basically rename dispatch to addExpense) which is now more accesible via props, for writing tests
-const mapDispatchToProps = (dispatch) => {
-    return {
-        startAddExpense: (expense) => dispatch(startAddExpense(expense))
-    }
-}
+const mapDispatchToProps = dispatch => {
+  return {
+    startAddExpense: expense => dispatch(startAddExpense(expense))
+  };
+};
 
-
-export default connect(undefined, mapDispatchToProps)(AddExpensePage)
+export default connect(undefined, mapDispatchToProps)(AddExpensePage);

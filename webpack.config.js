@@ -12,6 +12,9 @@
 // This runs based on the below if statements
 // We had to define the process.env plugin below for webpack and we had to stringify them to add double quotes " " around the values when it reads off of it
 
+// babel polyfill allows array methods like .includes to work in other browsers/
+// It's setup before webpack goes through app.js
+
 const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -30,7 +33,7 @@ module.exports = (env) => {
     
 
     return {
-        entry: './src/app.js',
+        entry: ['babel-polyfill','./src/app.js'],
         output: {
             path: path.join(__dirname, 'public', 'dist'),
             filename: 'bundle.js'
