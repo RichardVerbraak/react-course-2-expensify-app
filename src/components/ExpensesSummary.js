@@ -7,19 +7,24 @@ import dutchLocale from '../../locales/numeral-locale'
 
 numeral.locale('nl-nl')
 
+//# Note: I refactored this because the summary wouldn't update when I used state the previous time
+// This isn't the most clean code but it works
+
 // Change the inline variables (variables defined in render) to be outside
 // Maybe use numeral beforehand instead of doing this inside of render
-export class ExpensesSummary extends React.Component {
-    state = {
-        expenseCount: getVisibleExpenses(this.props.expenses, this.props.filters).length,
-        expensesTotal: getExpensesTotal(getVisibleExpenses(this.props.expenses, this.props.filters))
+export class ExpensesSummary extends React.Component {    
+    visibleExpenses = () => {
+        return this.props.expenses.length
+    }
+    expensesSum = () => {
+        return getExpensesTotal(this.props.expenses)
     }
     render() {
         return (
             <div>
-                {this.state.expenseCount > 0 && 
-                    <h1>Viewing {this.state.expenseCount} {this.state.expenseCount === 1 ? `expense` : `expenses`} totalling {numeral(this.state.expensesTotal / 100).format('$0,0.00')}</h1>
-                }                
+                {this.visibleExpenses() > 0 && 
+                    <h1>Viewing {this.visibleExpenses()} {this.visibleExpenses() === 1 ? `expense` : `expenses`} totalling {numeral(this.expensesSum() / 100).format('$0,0.00')}</h1>
+                }
             </div>
         )
     }
@@ -27,9 +32,12 @@ export class ExpensesSummary extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        expenses: state.expenses,
-        filters: state.filters
+        expenses: getVisibleExpenses(state.expenses, state.filters)
     }
 }
 
 export default connect(mapStateToProps)(ExpensesSummary)
+
+// {this.state.expenseCount === 1 ? `expense` : `expenses`}
+// {numeral(this.state.expensesTotal / 100).format('$0,0.00')}
+
